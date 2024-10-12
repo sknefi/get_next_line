@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 char	*read_line(char *str)
 {
@@ -58,7 +58,7 @@ char	*get_next_line(int fd)
 {
 	int				fd_read;
 	char			*tmp;
-	static char		*str_start;
+	static char		*str_start[1024];
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
@@ -66,7 +66,7 @@ char	*get_next_line(int fd)
 	if (!tmp)
 		return (NULL);
 	fd_read = 42;
-	while (!ft_strchr(tmp, '\n') && fd_read != 0)
+	while (!ft_strchr(str_start[fd], '\n') && fd_read != 0)
 	{
 		fd_read = read(fd, tmp, BUFFER_SIZE);
 		if (fd_read < 0)
@@ -75,10 +75,10 @@ char	*get_next_line(int fd)
 			return (NULL);
 		}
 		tmp[fd_read] = '\0';
-		str_start = ft_strjoin(str_start, tmp);
+		str_start[fd] = ft_strjoin(str_start[fd], tmp);
 	}
 	free(tmp);
-	tmp = read_line(str_start);
-	str_start = update_static_buffer(str_start);
+	tmp = read_line(str_start[fd]);
+	str_start[fd] = update_static_buffer(str_start[fd]);
 	return (tmp);
 }
