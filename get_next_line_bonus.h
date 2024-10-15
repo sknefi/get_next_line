@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.h                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fkarika <filip.karika1@gmail.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 14:32:56 by fkarika           #+#    #+#             */
-/*   Updated: 2024/10/08 13:58:57 by fkarika          ###   ########.fr       */
+/*   Updated: 2024/10/15 11:16:57 by fkarika          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 # include <stdio.h>
 
 # ifndef BUFFER_SIZE
-#define BUFFER_SIZE 10
+#	define BUFFER_SIZE 10
 # endif
 
 char	*get_next_line(int fd);

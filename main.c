@@ -1,30 +1,40 @@
-#include <fcntl.h>   // For open()
-#include <stdio.h>    // For printf()
-#include <unistd.h>   // For close()
-#include "get_next_line.h"  // Include your header
+#include <fcntl.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include "get_next_line.h"
 
-int main(void)
+int	main(void)
 {
-    int fd;  // File descriptor
-    char *line;
+	int		fd;
+	char	*line;
 
-    // Open a file for reading (change "test_file.txt" to your actual file name)
-    fd = open("a.txt", O_RDONLY);
-    if (fd == -1)
-    {
-        printf("Error: Could not open file\n");
-        return 1;
-    }
+	// Open the file "test.txt" for reading
+	fd = open("test.txt", O_RDONLY);
+	if (fd < 0)
+	{
+		perror("Error opening file");
+		return (1);
+	}
 
-    // Use get_next_line to read lines from the file
-    while ((line = get_next_line(fd)) != NULL)
-    {
-        printf("%s\n", line);  // Print the line (get_next_line already handles newlines)
-        free(line);          // Don't forget to free the allocated memory for each line
-    }
+	// Read and print each line using get_next_line
+	while ((line = get_next_line(fd)) != NULL)
+	{
+		printf("%s", line);
+		free(line);
+	}
+	close(fd);
+	printf("------------\n");
 
-    // Close the file descriptor
-    close(fd);
+	fd = open("test.txt", O_RDONLY);
+	(line = get_next_line(fd));
+	printf("%s", line);
+	free(line);	(line = get_next_line(fd)) ;
+	printf("%s", line);
+	free(line);	(line = get_next_line(fd));
+	printf("%s", line);
+	free(line);	
 
-    return 0;
+
+	close(fd);
+	return (0);
 }

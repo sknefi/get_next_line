@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fkarika <filip.karika1@gmail.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 14:32:48 by fkarika           #+#    #+#             */
-/*   Updated: 2024/10/08 14:05:16 by fkarika          ###   ########.fr       */
+/*   Updated: 2024/10/15 14:24:31 by fkarika          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,11 @@ char	*update_static_buffer(char *str)
 	if (str[i] == '\n')
 		i++;
 	str_len = ft_strlen(str + i);
+	if (str_len == 0)
+	{
+		free(str);
+		return (NULL);
+	}
 	new_str = (char *)malloc((str_len + 1) * sizeof(char));
 	if (!new_str)
 	{
@@ -60,7 +65,7 @@ char	*get_next_line(int fd)
 	char			*tmp;
 	static char		*str_start[1024];
 
-	if (fd < 0 || BUFFER_SIZE <= 0)
+	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
 		return (NULL);
 	tmp = (char *)ft_calloc(BUFFER_SIZE + 1, sizeof(char));
 	if (!tmp)
@@ -70,10 +75,7 @@ char	*get_next_line(int fd)
 	{
 		fd_read = read(fd, tmp, BUFFER_SIZE);
 		if (fd_read < 0)
-		{
-			free(tmp);
-			return (NULL);
-		}
+			return (free(tmp), free(str_start[fd]), str_start[fd] = NULL, NULL);
 		tmp[fd_read] = '\0';
 		str_start[fd] = ft_strjoin(str_start[fd], tmp);
 	}
