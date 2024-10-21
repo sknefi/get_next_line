@@ -78,7 +78,7 @@ char	*get_next_line(int fd)
 		// if (i++ == 1)
 		// 	fd_read = -1;
 		if (fd_read < 0)
-			return (free(tmp), free(str_start), str_start = NULL, NULL);
+			return (free(tmp), free(str_start), NULL);
 		tmp[fd_read] = '\0';
 		str_start = ft_strjoin(str_start, tmp);
 	}
