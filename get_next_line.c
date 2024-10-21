@@ -64,9 +64,8 @@ char	*get_next_line(int fd)
 	int				fd_read;
 	char			*tmp;
 	static char		*str_start;
-	// static int i = 0;
 
-	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
+	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
 	tmp = (char *)ft_calloc(BUFFER_SIZE + 1, sizeof(char));
 	if (!tmp)
@@ -75,10 +74,8 @@ char	*get_next_line(int fd)
 	while (!ft_strchr(tmp, '\n') && fd_read != 0)
 	{
 		fd_read = read(fd, tmp, BUFFER_SIZE);
-		// if (i++ == 1)
-		// 	fd_read = -1;
 		if (fd_read < 0)
-			return (free(tmp), free(str_start), NULL);
+			return (free(tmp), free(str_start), str_start = NULL, NULL);
 		tmp[fd_read] = '\0';
 		str_start = ft_strjoin(str_start, tmp);
 	}
