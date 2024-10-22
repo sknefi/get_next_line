@@ -12,7 +12,7 @@
 
 #include "get_next_line.h"
 
-static char	*read_line(char *str, int *err)
+char	*read_line(char *str, int *err)
 {
 	int		itr;
 	char	*line;
@@ -31,7 +31,7 @@ static char	*read_line(char *str, int *err)
 	return (line);
 }
 
-static char	*update_static_buffer(char *str, int *err)
+char	*update_static_buffer(char *str, int *err)
 {
 	int		i;
 	char	*new_str;
@@ -53,29 +53,6 @@ static char	*update_static_buffer(char *str, int *err)
 	return (new_str);
 }
 
-static char	*find_next_line(int fd, char *str_start, char *tmp, int *err)
-{
-	int		fd_read;
-	char	*next_line;
-
-	fd_read = 42;
-	while (!ft_strchr(tmp, '\n') && fd_read != 0)
-	{
-		fd_read = read(fd, tmp, BUFFER_SIZE);
-		if (fd_read < 0)
-			return (free(tmp), free(str_start), str_start = NULL, NULL);
-		tmp[fd_read] = '\0';
-		str_start = ft_strjoin(str_start, tmp, err);
-		if (*err < 0)
-			return (free(tmp), free(str_start), str_start = NULL, NULL);
-	}
-	free(tmp);
-	next_line = read_line(str_start, err);
-	if (*err < 0)
-		return (free(str_start), str_start = NULL, NULL);
-	return (next_line);
-}
-
 // malloc error => (err = -1)
 char	*get_next_line(int fd)
 {
@@ -91,9 +68,23 @@ char	*get_next_line(int fd)
 	tmp = (char *)ft_calloc(BUFFER_SIZE + 1, sizeof(char), &err);
 	if (!tmp)
 		return (NULL);
-	next_line = find_next_line(fd, str_start, tmp, &err);
+	fd_read = 42;
+	while (!ft_strchr(tmp, '\n') && fd_read != 0)
+	{
+		fd_read = read(fd, tmp, BUFFER_SIZE);
+		if (fd_read < 0)
+			return (free(tmp), free(str_start), str_start = NULL, NULL);
+		tmp[fd_read] = '\0';
+		str_start = ft_strjoin(str_start, tmp, &err);
+		// if (err < 0)
+		// 	return (free(tmp), free(str_start), str_start = NULL, NULL);
+	}
+	free(tmp);
+	next_line = read_line(str_start, &err);
+	// if (err < 0)
+	// 	return (free(str_start), str_start = NULL, NULL);
 	str_start = update_static_buffer(str_start, &err);
-	if (err < 0)
-		return (free(next_line), free(str_start), str_start = NULL, NULL);
+	// if (err < 0)
+	// 	return (free(next_line), free(str_start), str_start = NULL, NULL);
 	return (next_line);
 }
