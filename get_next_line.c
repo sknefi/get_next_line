@@ -76,15 +76,9 @@ char	*get_next_line(int fd)
 			return (free(tmp), free(str_start), str_start = NULL, NULL);
 		tmp[fd_read] = '\0';
 		str_start = ft_strjoin(str_start, tmp, &err);
-		// if (err < 0)
-		// 	return (free(tmp), free(str_start), str_start = NULL, NULL);
 	}
 	free(tmp);
 	next_line = read_line(str_start, &err);
-	// if (err < 0)
-	// 	return (free(str_start), str_start = NULL, NULL);
 	str_start = update_static_buffer(str_start, &err);
-	// if (err < 0)
-	// 	return (free(next_line), free(str_start), str_start = NULL, NULL);
 	return (next_line);
 }

@@ -53,7 +53,7 @@ char	*ft_strjoin(char *s1, char *s2, int *err)
 {
 	char	*str;
 
-	if (!s1)
+	if (s1 == NULL)
 	{
 		s1 = (char *)malloc(1 * sizeof(char));
 		if (!s1)
