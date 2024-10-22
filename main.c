@@ -23,18 +23,5 @@ int	main(void)
 		free(line);
 	}
 	close(fd);
-	printf("------------\n");
-
-	fd = open("test.txt", O_RDONLY);
-	(line = get_next_line(fd));
-	printf("%s", line);
-	free(line);	(line = get_next_line(fd)) ;
-	printf("%s", line);
-	free(line);	(line = get_next_line(fd));
-	printf("%s", line);
-	free(line);	
-
-
-	close(fd);
 	return (0);
 }
