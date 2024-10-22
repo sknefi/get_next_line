@@ -12,7 +12,7 @@
 
 #include "get_next_line.h"
 
-char	*read_line(char *str)
+static char	*read_line(char *str, int *err)
 {
 	int		itr;
 	char	*line;
@@ -26,12 +26,12 @@ char	*read_line(char *str)
 		itr++;
 	line = (char *)malloc((itr + 1) * sizeof(char));
 	if (!line)
-		return (NULL);
+		return (*err = -1, NULL);
 	ft_strlcpy(line, str, itr + 1);
 	return (line);
 }
 
-char	*update_static_buffer(char *str)
+static char	*update_static_buffer(char *str, int *err)
 {
 	int		i;
 	char	*new_str;
@@ -44,32 +44,20 @@ char	*update_static_buffer(char *str)
 		i++;
 	str_len = ft_strlen(str + i);
 	if (str_len == 0)
-	{
-		free(str);
-		return (NULL);
-	}
+		return (free(str), NULL);
 	new_str = (char *)malloc((str_len + 1) * sizeof(char));
 	if (!new_str)
-	{
-		free(str);
-		return (NULL);
-	}
+		return (*err = -1, NULL);
 	ft_strlcpy(new_str, str + i, str_len + 1);
 	free(str);
 	return (new_str);
 }
 
-char	*get_next_line(int fd)
+static char	*find_next_line(int fd, char *str_start, char *tmp, int *err)
 {
-	int				fd_read;
-	char			*tmp;
-	static char		*str_start;
+	int		fd_read;
+	char	*next_line;
 
-	if (fd < 0 || BUFFER_SIZE <= 0)
-		return (NULL);
-	tmp = (char *)ft_calloc(BUFFER_SIZE + 1, sizeof(char));
-	if (!tmp)
-		return (NULL);
 	fd_read = 42;
 	while (!ft_strchr(tmp, '\n') && fd_read != 0)
 	{
@@ -77,10 +65,35 @@ char	*get_next_line(int fd)
 		if (fd_read < 0)
 			return (free(tmp), free(str_start), str_start = NULL, NULL);
 		tmp[fd_read] = '\0';
-		str_start = ft_strjoin(str_start, tmp);
+		str_start = ft_strjoin(str_start, tmp, err);
+		if (*err < 0)
+			return (free(tmp), free(str_start), str_start = NULL, NULL);
 	}
 	free(tmp);
-	tmp = read_line(str_start);
-	str_start = update_static_buffer(str_start);
-	return (tmp);
+	next_line = read_line(str_start, err);
+	if (*err < 0)
+		return (free(str_start), str_start = NULL, NULL);
+	return (next_line);
+}
+
+// malloc error => (err = -1)
+char	*get_next_line(int fd)
+{
+	int				fd_read;
+	int				err;
+	char			*tmp;
+	char			*next_line;
+	static char		*str_start;
+
+	if (fd < 0 || BUFFER_SIZE <= 0)
+		return (NULL);
+	err = 0;
+	tmp = (char *)ft_calloc(BUFFER_SIZE + 1, sizeof(char), &err);
+	if (!tmp)
+		return (NULL);
+	next_line = find_next_line(fd, str_start, tmp, &err);
+	str_start = update_static_buffer(str_start, &err);
+	if (err < 0)
+		return (free(next_line), free(str_start), str_start = NULL, NULL);
+	return (next_line);
 }
