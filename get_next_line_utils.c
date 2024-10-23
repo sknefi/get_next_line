@@ -38,7 +38,6 @@ void	*ft_calloc(size_t count, size_t size, int *err)
 	if (count && (count * size) / count != size)
 		return (*err = -1, NULL);
 	ptr = (void *)malloc(count * size);
-	// ptr = NULL;
 	if (!ptr)
 		return (*err = -1, NULL);
 	i = 0;

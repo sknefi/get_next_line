@@ -55,8 +55,8 @@ char	*update_static_buffer(char *str, int *err)
 
 char	*get_next_line(int fd)
 {
-	int				fd_read;
 	int				err;
+	int				fd_read;
 	char			*tmp;
 	char			*next_line;
 	static char		*str_start;
