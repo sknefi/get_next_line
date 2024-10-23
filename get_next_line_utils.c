@@ -6,7 +6,7 @@
 /*   By: fkarika <filip.karika1@gmail.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 11:12:12 by fkarika           #+#    #+#             */
-/*   Updated: 2024/10/15 14:47:31 by fkarika          ###   ########.fr       */
+/*   Updated: 2024/10/23 14:33:36 by fkarika          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ void	*ft_calloc(size_t count, size_t size, int *err)
 	if (count && (count * size) / count != size)
 		return (*err = -1, NULL);
 	ptr = (void *)malloc(count * size);
+	// ptr = NULL;
 	if (!ptr)
 		return (*err = -1, NULL);
 	i = 0;

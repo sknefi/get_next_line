@@ -6,7 +6,7 @@
 /*   By: fkarika <filip.karika1@gmail.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 14:32:48 by fkarika           #+#    #+#             */
-/*   Updated: 2024/10/15 15:32:45 by fkarika          ###   ########.fr       */
+/*   Updated: 2024/10/23 14:56:32 by fkarika          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,13 +47,12 @@ char	*update_static_buffer(char *str, int *err)
 		return (free(str), NULL);
 	new_str = (char *)ft_calloc((str_len + 1), sizeof(char), err);
 	if (!new_str || *err < 0)
-		return (*err = -1, NULL);
+		return (free(str), *err = -1, NULL);
 	ft_strlcpy(new_str, str + i, str_len + 1);
 	free(str);
 	return (new_str);
 }
 
-// malloc error => (err = -1)
 char	*get_next_line(int fd)
 {
 	int				fd_read;
@@ -67,7 +66,7 @@ char	*get_next_line(int fd)
 	err = 0;
 	tmp = (char *)ft_calloc(BUFFER_SIZE + 1, sizeof(char), &err);
 	if (!tmp || err < 0)
-		return (NULL);
+		return (free(str_start), str_start = NULL, NULL);
 	fd_read = 42;
 	while (!ft_strchr(tmp, '\n') && fd_read != 0)
 	{
@@ -82,7 +81,7 @@ char	*get_next_line(int fd)
 	free(tmp);
 	next_line = read_line(str_start, &err);
 	if (err < 0)
-			return (free(next_line), free(str_start), str_start = NULL, NULL);
+		return (free(next_line), free(str_start), str_start = NULL, NULL);
 	str_start = update_static_buffer(str_start, &err);
 	if (err < 0)
 		return (free(next_line), free(str_start), str_start = NULL, NULL);
