@@ -36,7 +36,7 @@ void	*ft_calloc(size_t count, size_t size, int *err)
 	size_t	i;
 
 	if (count && (count * size) / count != size)
-		return (NULL);
+		return (*err = -1, NULL);
 	ptr = (void *)malloc(count * size);
 	if (!ptr)
 		return (*err = -1, NULL);
@@ -65,7 +65,7 @@ char	*ft_strjoin(char *s1, char *s2, int *err)
 	str = (char *)malloc(
 			sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1));
 	if (!str)
-		return (*err = -1, NULL);
+		return (*err = -1, free(s1), NULL);
 	ft_strlcpy(str, s1, ft_strlen(s1) + 1);
 	ft_strlcpy(str + ft_strlen(s1), s2, ft_strlen(s2) + 1);
 	free(s1);

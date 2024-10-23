@@ -24,8 +24,8 @@ char	*read_line(char *str, int *err)
 		itr++;
 	if (str[itr] == '\n')
 		itr++;
-	line = (char *)malloc((itr + 1) * sizeof(char));
-	if (!line)
+	line = (char *)ft_calloc((itr + 1), sizeof(char), err);
+	if (!line || *err < 0)
 		return (*err = -1, NULL);
 	ft_strlcpy(line, str, itr + 1);
 	return (line);
@@ -45,8 +45,8 @@ char	*update_static_buffer(char *str, int *err)
 	str_len = ft_strlen(str + i);
 	if (str_len == 0)
 		return (free(str), NULL);
-	new_str = (char *)malloc((str_len + 1) * sizeof(char));
-	if (!new_str)
+	new_str = (char *)ft_calloc((str_len + 1), sizeof(char), err);
+	if (!new_str || *err < 0)
 		return (*err = -1, NULL);
 	ft_strlcpy(new_str, str + i, str_len + 1);
 	free(str);
@@ -76,9 +76,15 @@ char	*get_next_line(int fd)
 			return (free(tmp), free(str_start), str_start = NULL, NULL);
 		tmp[fd_read] = '\0';
 		str_start = ft_strjoin(str_start, tmp, &err);
+		if (err < 0)
+			return (free(tmp), free(str_start), str_start = NULL, NULL);
 	}
 	free(tmp);
 	next_line = read_line(str_start, &err);
+	if (err < 0)
+			return (free(next_line), free(str_start), str_start = NULL, NULL);
 	str_start = update_static_buffer(str_start, &err);
+	if (err < 0)
+		return (free(next_line), free(str_start), str_start = NULL, NULL);
 	return (next_line);
 }
