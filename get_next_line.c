@@ -6,7 +6,7 @@
 /*   By: fkarika <filip.karika1@gmail.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 14:32:48 by fkarika           #+#    #+#             */
-/*   Updated: 2024/10/23 14:56:32 by fkarika          ###   ########.fr       */
+/*   Updated: 2024/10/23 16:46:12 by fkarika          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,10 +53,29 @@ char	*update_static_buffer(char *str, int *err)
 	return (new_str);
 }
 
+void	read_file(int fd, char **str_start, char *tmp, int *err)
+{
+	int		fd_read;
+
+	fd_read = 42;
+	while (!ft_strchr(tmp, '\n') && fd_read != 0)
+	{
+		fd_read = read(fd, tmp, BUFFER_SIZE);
+		if (fd_read < 0)
+		{
+			*err = -1;
+			return ;
+		}
+		tmp[fd_read] = '\0';
+		*str_start = ft_strjoin(*str_start, tmp, err);
+		if (*err < 0)
+			return ;
+	}
+}
+
 char	*get_next_line(int fd)
 {
 	int				err;
-	int				fd_read;
 	char			*tmp;
 	char			*next_line;
 	static char		*str_start;
@@ -67,17 +86,9 @@ char	*get_next_line(int fd)
 	tmp = (char *)ft_calloc(BUFFER_SIZE + 1, sizeof(char), &err);
 	if (!tmp || err < 0)
 		return (free(str_start), str_start = NULL, NULL);
-	fd_read = 42;
-	while (!ft_strchr(tmp, '\n') && fd_read != 0)
-	{
-		fd_read = read(fd, tmp, BUFFER_SIZE);
-		if (fd_read < 0)
-			return (free(tmp), free(str_start), str_start = NULL, NULL);
-		tmp[fd_read] = '\0';
-		str_start = ft_strjoin(str_start, tmp, &err);
-		if (err < 0)
-			return (free(tmp), free(str_start), str_start = NULL, NULL);
-	}
+	read_file(fd, &str_start, tmp, &err);
+	if (err < 0)
+		return (free(tmp), free(str_start), str_start = NULL, NULL);
 	free(tmp);
 	next_line = read_line(str_start, &err);
 	if (err < 0)

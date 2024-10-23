@@ -6,7 +6,7 @@
 /*   By: fkarika <filip.karika1@gmail.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 14:32:48 by fkarika           #+#    #+#             */
-/*   Updated: 2024/10/23 14:57:35 by fkarika          ###   ########.fr       */
+/*   Updated: 2024/10/23 16:56:49 by fkarika          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,10 +53,29 @@ char	*update_static_buffer(char *str, int *err)
 	return (new_str);
 }
 
+void	read_file(int fd, char **str_start, char *tmp, int *err)
+{
+	int		fd_read;
+
+	fd_read = 42;
+	while (!ft_strchr(tmp, '\n') && fd_read != 0)
+	{
+		fd_read = read(fd, tmp, BUFFER_SIZE);
+		if (fd_read < 0)
+		{
+			*err = -1;
+			return ;
+		}
+		tmp[fd_read] = '\0';
+		*str_start = ft_strjoin(*str_start, tmp, err);
+		if (*err < 0)
+			return ;
+	}
+}
+
 char	*get_next_line(int fd)
 {
 	int				err;
-	int				fd_read;
 	char			*tmp;
 	char			*next_line;
 	static char		*str_start[1024];
@@ -67,23 +86,17 @@ char	*get_next_line(int fd)
 	tmp = (char *)ft_calloc(BUFFER_SIZE + 1, sizeof(char), &err);
 	if (!tmp)
 		return (free(str_start[fd]), str_start[fd] = NULL, NULL);
-	fd_read = 42;
-	while (!ft_strchr(str_start[fd], '\n') && fd_read != 0)
-	{
-		fd_read = read(fd, tmp, BUFFER_SIZE);
-		if (fd_read < 0)
-			return (free(tmp), free(str_start[fd]), str_start[fd] = NULL, NULL);
-		tmp[fd_read] = '\0';
-		str_start[fd] = ft_strjoin(str_start[fd], tmp, &err);
-		if (err < 0)
-			return (free(tmp), free(str_start[fd]), str_start[fd] = NULL, NULL);
-	}
+	read_file(fd, &(str_start[fd]), tmp, &err);
+	if (err < 0)
+		return (free(tmp), free(str_start[fd]), str_start[fd] = NULL, NULL);
 	free(tmp);
 	next_line = read_line(str_start[fd], &err);
 	if (err < 0)
-		return (free(next_line), free(str_start[fd]), str_start[fd] = NULL, NULL);
+		return (free(next_line), free(str_start[fd]),
+			str_start[fd] = NULL, NULL);
 	str_start[fd] = update_static_buffer(str_start[fd], &err);
 	if (err < 0)
-		return (free(next_line), free(str_start[fd]), str_start[fd] = NULL, NULL);
+		return (free(next_line), free(str_start[fd]),
+			str_start[fd] = NULL, NULL);
 	return (next_line);
 }
