@@ -55,17 +55,17 @@ char	*ft_strjoin(char *s1, char *s2, int *err)
 
 	if (s1 == NULL)
 	{
-		s1 = (char *)malloc(1 * sizeof(char));
-		if (!s1)
-			return (*err = -1, NULL);
+		s1 = (char *)ft_calloc(1, sizeof(char), err);
+		if (!s1 || *err < 0)
+			return (NULL);
 		s1[0] = '\0';
 	}
 	if (!s2)
 		return (NULL);
-	str = (char *)malloc(
-			sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1));
-	if (!str)
-		return (*err = -1, free(s1), NULL);
+	str = (char *)ft_calloc(
+			(ft_strlen(s1) + ft_strlen(s2) + 1), sizeof(char), err);
+	if (!str || *err < 0)
+		return (free(s1), NULL);
 	ft_strlcpy(str, s1, ft_strlen(s1) + 1);
 	ft_strlcpy(str + ft_strlen(s1), s2, ft_strlen(s2) + 1);
 	free(s1);

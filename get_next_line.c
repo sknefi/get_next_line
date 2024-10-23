@@ -66,7 +66,7 @@ char	*get_next_line(int fd)
 		return (NULL);
 	err = 0;
 	tmp = (char *)ft_calloc(BUFFER_SIZE + 1, sizeof(char), &err);
-	if (!tmp)
+	if (!tmp || err < 0)
 		return (NULL);
 	fd_read = 42;
 	while (!ft_strchr(tmp, '\n') && fd_read != 0)
