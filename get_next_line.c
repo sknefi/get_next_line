@@ -12,7 +12,7 @@
 
 #include "get_next_line.h"
 
-char	*read_line(char *str, int *err)
+static char	*read_line(char *str, int *err)
 {
 	int		itr;
 	char	*line;
@@ -24,14 +24,14 @@ char	*read_line(char *str, int *err)
 		itr++;
 	if (str[itr] == '\n')
 		itr++;
-	line = (char *)ft_calloc((itr + 1), sizeof(char), err);
+	line = (char *)gnl_ft_calloc((itr + 1), sizeof(char), err);
 	if (!line || *err < 0)
 		return (*err = -1, NULL);
-	ft_strlcpy(line, str, itr + 1);
+	gnl_ft_strlcpy(line, str, itr + 1);
 	return (line);
 }
 
-char	*update_static_buffer(char *str, int *err)
+static char	*update_static_buffer(char *str, int *err)
 {
 	int		i;
 	char	*new_str;
@@ -42,23 +42,23 @@ char	*update_static_buffer(char *str, int *err)
 		i++;
 	if (str[i] == '\n')
 		i++;
-	str_len = ft_strlen(str + i);
+	str_len = gnl_ft_strlen(str + i);
 	if (str_len == 0)
 		return (free(str), NULL);
-	new_str = (char *)ft_calloc((str_len + 1), sizeof(char), err);
+	new_str = (char *)gnl_ft_calloc((str_len + 1), sizeof(char), err);
 	if (!new_str || *err < 0)
 		return (free(str), *err = -1, NULL);
-	ft_strlcpy(new_str, str + i, str_len + 1);
+	gnl_ft_strlcpy(new_str, str + i, str_len + 1);
 	free(str);
 	return (new_str);
 }
 
-void	read_file(int fd, char **str_start, char *tmp, int *err)
+static void	read_file(int fd, char **str_start, char *tmp, int *err)
 {
 	int		fd_read;
 
 	fd_read = 42;
-	while (!ft_strchr(tmp, '\n') && fd_read != 0)
+	while (!gnl_ft_strchr(tmp, '\n') && fd_read != 0)
 	{
 		fd_read = read(fd, tmp, BUFFER_SIZE);
 		if (fd_read < 0)
@@ -67,7 +67,7 @@ void	read_file(int fd, char **str_start, char *tmp, int *err)
 			return ;
 		}
 		tmp[fd_read] = '\0';
-		*str_start = ft_strjoin(*str_start, tmp, err);
+		*str_start = gnl_ft_strjoin(*str_start, tmp, err);
 		if (*err < 0)
 			return ;
 	}
@@ -83,7 +83,7 @@ char	*get_next_line(int fd)
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
 	err = 0;
-	tmp = (char *)ft_calloc(BUFFER_SIZE + 1, sizeof(char), &err);
+	tmp = (char *)gnl_ft_calloc(BUFFER_SIZE + 1, sizeof(char), &err);
 	if (!tmp || err < 0)
 		return (free(str_start), str_start = NULL, NULL);
 	read_file(fd, &str_start, tmp, &err);

@@ -24,10 +24,10 @@
 
 char	*get_next_line(int fd);
 
-char	*ft_strjoin(char *s1, char *s2, int *err);
-char	*ft_strchr(const char *s, int c);
-void	*ft_calloc(size_t count, size_t size, int *err);
-size_t	ft_strlen(const char *str);
-size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize);
+char	*gnl_ft_strjoin(char *s1, char *s2, int *err);
+char	*gnl_ft_strchr(const char *s, int c);
+void	*gnl_ft_calloc(size_t count, size_t size, int *err);
+size_t	gnl_ft_strlen(const char *str);
+size_t	gnl_ft_strlcpy(char *dst, const char *src, size_t dstsize);
 
 #endif

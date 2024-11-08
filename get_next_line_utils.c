@@ -12,7 +12,7 @@
 
 #include "get_next_line.h"
 
-char	*ft_strchr(const char *s, int c)
+char	*gnl_ft_strchr(const char *s, int c)
 {
 	int		i;
 
@@ -30,7 +30,7 @@ char	*ft_strchr(const char *s, int c)
 	return (NULL);
 }
 
-void	*ft_calloc(size_t count, size_t size, int *err)
+void	*gnl_ft_calloc(size_t count, size_t size, int *err)
 {
 	void	*ptr;
 	size_t	i;
@@ -49,30 +49,30 @@ void	*ft_calloc(size_t count, size_t size, int *err)
 	return (ptr);
 }
 
-char	*ft_strjoin(char *s1, char *s2, int *err)
+char	*gnl_ft_strjoin(char *s1, char *s2, int *err)
 {
 	char	*str;
 
 	if (s1 == NULL)
 	{
-		s1 = (char *)ft_calloc(1, sizeof(char), err);
+		s1 = (char *)gnl_ft_calloc(1, sizeof(char), err);
 		if (!s1 || *err < 0)
 			return (NULL);
 		s1[0] = '\0';
 	}
 	if (!s2)
 		return (NULL);
-	str = (char *)ft_calloc(
-			(ft_strlen(s1) + ft_strlen(s2) + 1), sizeof(char), err);
+	str = (char *)gnl_ft_calloc(
+			(gnl_ft_strlen(s1) + gnl_ft_strlen(s2) + 1), sizeof(char), err);
 	if (!str || *err < 0)
 		return (free(s1), NULL);
-	ft_strlcpy(str, s1, ft_strlen(s1) + 1);
-	ft_strlcpy(str + ft_strlen(s1), s2, ft_strlen(s2) + 1);
+	gnl_ft_strlcpy(str, s1, gnl_ft_strlen(s1) + 1);
+	gnl_ft_strlcpy(str + gnl_ft_strlen(s1), s2, gnl_ft_strlen(s2) + 1);
 	free(s1);
 	return (str);
 }
 
-size_t	ft_strlen(const char *str)
+size_t	gnl_ft_strlen(const char *str)
 {
 	size_t	i;
 
@@ -84,7 +84,7 @@ size_t	ft_strlen(const char *str)
 	return (i);
 }
 
-size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize)
+size_t	gnl_ft_strlcpy(char *dst, const char *src, size_t dstsize)
 {
 	size_t	i;
 	size_t	src_len;
